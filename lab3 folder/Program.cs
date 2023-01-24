@@ -27,34 +27,24 @@ class Program
                 String questionAnswer = Console.ReadLine();
                 Console.WriteLine("What is the question difficulty?");
                 int questionDiff = int.Parse(Console.ReadLine());
-                newQuiz.add_question(questionText,questionAnswer,questionDiff);
+                newQuiz.add_question(questionText, questionAnswer, questionDiff);
             }
             else if (choice == 2)
             {
-                bread.lowQuantity(1);
+
+                newQuiz.remove_question();
             }
             else if (choice == 3)
             {
-                Console.WriteLine("Enter new Price of milk below:");
-                double sale = double.Parse(Console.ReadLine());
-                milk.newPrice(sale);
+
+                newQuiz.modify_question();
             }
             else if (choice == 4)
             {
-                Console.WriteLine("Enter new Price of bread below:");
-                double sale = double.Parse(Console.ReadLine());
-                milk.newPrice(sale);
+                newQuiz.give_quiz();
             }
-            else if (choice == 5)
-            {
-                Console.WriteLine("Enter the shipment of milk recieved below:");
-                int shipment = int.Parse(Console.ReadLine());
-                milk.addQuantity(shipment);
-
-
-            }
-            while (choice != 5) ;
-
         }
+        while (choice < 5);
+  
     }
 }
