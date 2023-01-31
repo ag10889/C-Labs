@@ -94,6 +94,63 @@ public class Lot
 		A.markSold();
 		Console.WriteLine(A);
     }
+	public void mainMenu(List<Lot> A)
+    {
+		Lot currentLot = null;
+		
+		int choice;
+		do
+		{
+			Console.WriteLine("1. Add Lot to Auction");
+			Console.WriteLine("2. Start bidding on next Lot");
+			Console.WriteLine("3. Bid of current Lot");
+			Console.WriteLine("4. Mark current Lot sold");
+			Console.WriteLine("5. Quit");
+			choice = int.Parse(Console.ReadLine());
 
+
+
+			if (choice == 1)
+			{
+				if (A[0].getDes().Equals("Unknown Item");)
+                {
+					Console.WriteLine("we are currently not bidding");
+                } else
+                {
+					currentLot = addItem(A);
+                }
+
+			}
+			else if (choice == 2)
+			{
+				if(currentLot == null)
+                {
+					Console.WriteLine("There is nothign to bid on, add an item first");
+                }
+                else
+                {
+					if (currentLot.getSold() != true)
+                    {
+						Console.WriteLine("You must sell the previous Lot before proceeding");
+                    } else
+                    {
+						currentLot = getNextLot(A);
+                    }
+                }
+			
+			}
+			else if (choice == 3)
+			{
+
+		
+			}
+			else if (choice == 4)
+			{
+			
+			}
+		}
+		while (choice < 5)
+
+	}
 
 }
