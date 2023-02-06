@@ -20,15 +20,16 @@ namespace Assignment2 {
             String newDes = Console.ReadLine();
             int newBid = int.Parse(Console.ReadLine());
             int newInc = int.Parse(Console.ReadLine());
-            A.Add(Lot(newDes, newBid, newInc));
+            Lot B = new Lot(newDes, newBid, newInc);
+            A.Add(B);
         }
         public void bid(Lot A)
         {
-            Console.WriteLine("How much would you like to bid? The current miniumum bid is " + Lot.nextBid());
+            Console.WriteLine("How much would you like to bid? The current miniumum bid is " + A.nextBid());
             int bid = int.Parse(Console.ReadLine());
-            if (bid < nextBid())
+            if (bid < A.nextBid())
             {
-                Console.WriteLine("That bid is too small, you need to up it to " + Lot.nextBid());
+                Console.WriteLine("That bid is too small, you need to up it to " + A.nextBid());
 
             }
             else
@@ -60,21 +61,17 @@ namespace Assignment2 {
 
                 if (choice == 1)
                 {
-                    if (A[0].getDes().Equals("Unknown Item"))
-                    {
-                        Console.WriteLine("we are currently not bidding");
-                    }
-                    else
-                    {
-                        currentLot.addItem(A);
-                    }
+                    Console.WriteLine("Enter information about the item you would like to sell");
+                    addItem(A);
+                    currentLot = A[0];
+
 
                 }
                 else if (choice == 2)
                 {
                     if (currentLot == null)
                     {
-                        Console.WriteLine("There is nothign to bid on, add an item first");
+                        Console.WriteLine("There is nothing to bid on, add an item first");
                     }
                     else
                     {
@@ -105,7 +102,9 @@ namespace Assignment2 {
                     }
                     else
                     {
-                        currentLot.bid(A);
+                        Console.WriteLine("How much would you like to bid?");
+                        int I = int.Parse(Console.ReadLine());
+                        currentLot.setBid(I);
                     }
 
                 }
@@ -132,7 +131,7 @@ namespace Assignment2 {
         public static void main(String args)
         {
             List<Lot> Auction = new List<Lot>();
-            Lot.mainMenu(Auction);
+            mainMenu(Auction);
         }
     }
 }
