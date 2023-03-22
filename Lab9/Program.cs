@@ -2,41 +2,61 @@
 
 class Program
 {
-    public class InvalidTimeException : Exception
+    class InvalidTimeException : Exception
     {
-        public InvalidTimeException() : base() { } //creates a new exception type named InvalidTimeExxception
-        public InvalidTimeException(string message) : base(message) { } //InvalidTimeException has the same "error" message as exception as it inherits it
-        public InvalidTimeException(string message, Exception innerException) : base(message, innerException) { } //Inherits 
+        /* Creates a new Exception class called InvalidTimeException. 
+         * Creates a new default Exception constructor of type InvalidTimeException
+         * Creates a new overloaded Exception constructor of type InvalidTimeException
+         * Creates a new overloaded Exception constructor of type InvalidTimeException that inherits its message and 
+         */
+        public InvalidTimeException() : base() { } 
+        public InvalidTimeException(string message) : base(message) { }  
+        public InvalidTimeException(string message, Exception innerException) : base(message, innerException) { }  
     }
     public static int ConvertTimeToSeconds(string timeString)
     {
+        /* Creates a new method, ConvertTimeToSecond, which takes a string, timeString, and returns an int
+         * Creates a new string array, parts, which takes in the values split by timeString.Split(':',3).
+         * int hours, minutes and seconds each are given their represtive values after converting the indexes to Int32
+         * Inside the if statements, hours, minutes and seconds are checked for validaty 
+         * Returns (hours * 60 * 60) + (minutes * 60) + seconds
+         */
         string[] parts = timeString.Split(':', 3);
-
-        int hours = Convert.ToInt32(parts[0]);
-        int minutes = Convert.ToInt32(parts[1]);
-        int seconds = Convert.ToInt32(parts[2]);
-
-        if (hours < 0 || hours > 23)
+        if (timeString.Length != 8)
         {
-            throw new InvalidTimeException("Invalid hour value: " + hours);
+            throw new InvalidTimeException("Invalid time format has been entered.");
+        }
+        int hours, minutes, seconds;
+        if (!int.TryParse(parts[0], out hours) || !int.TryParse(parts[1], out minutes) || !int.TryParse(parts[2], out seconds))
+        {
+            throw new InvalidTimeException("Invalid time format has been entered, please enter numerical values. ");
+        }
+    
+        if (hours == null || hours < 0 || hours > 23)
+        {
+            throw new InvalidTimeException("Hours must be less than 24: " + hours);
         }
 
-        if (minutes < 0 || minutes > 59)
+        if (minutes == null || minutes < 0 || minutes > 59)
         {
-            throw new InvalidTimeException("Invalid minute value: " + minutes);
+            throw new InvalidTimeException("Minutes must be less than 60: " + minutes);
         }
 
-        if (seconds < 0 || seconds > 59)
+        if (seconds == null || seconds < 0 || seconds > 59)
         {
-            throw new InvalidTimeException("Invalid second value: " + seconds);
+            throw new InvalidTimeException("Seconds must be less than 60: " + seconds);
         }
+        
 
-        int totalSeconds = (hours * 60 * 60) + (minutes * 60) + seconds;
-        return totalSeconds;
+        return (hours * 60 * 60) + (minutes * 60) + seconds;
+        
     }
 
     static void Main(string[] args)
     {
+        /*Runs the code in a try catch block, with InvalidTimeException catching incorrect HH,MM,SS or invalid inputs
+         * 
+         */
         try
         {
             Console.Write("Enter the first time (in HH:MM:SS format): ");
@@ -47,7 +67,7 @@ class Program
             string secondTime = Console.ReadLine();
             int secondSeconds = ConvertTimeToSeconds(secondTime);
 
-            int difference = firstSeconds - secondSeconds;
+            int difference = secondSeconds - firstSeconds;
             Console.WriteLine("The difference between the two times is {0} seconds.", difference);
         }
         catch (InvalidTimeException ex)
