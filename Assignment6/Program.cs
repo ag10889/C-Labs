@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.IO;
 using System.Net.Sockets;
@@ -97,7 +97,8 @@ public class program
 
     }
     public static float getPersonFromFile(string personNam, string fileNam)
-    {
+    { 
+	//This method returns the current value of BTC the person has from the file
         StreamReader sr = new StreamReader(fileNam);
         string corPerson;
         while ((corPerson = sr.ReadLine()) != null)
@@ -141,6 +142,10 @@ public class program
                 Console.WriteLine("Please enter the file you would like to search.");
                 string file = Console.ReadLine();
                 float ogInv = getPersonFromFile(name, file);
+		float currentValue = ogInv * getCurrentValue(BTC); //Somehow get the current value
+		float change = currentValue - ogInv;
+		Console.writeLine(change);
+		
             }
         }
     }
