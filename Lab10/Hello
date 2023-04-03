@@ -1,2 +1,0 @@
-THis lab deals with threading in C#. The student is asked to create a parent baby class and 5 children baby class. Uisng threading in C#, the sutdent is required 
-required to have random sleep and wake time, as well as keeping track of each baby's name. 
