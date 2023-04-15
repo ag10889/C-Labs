@@ -2,6 +2,8 @@
 using System.Threading;
 using System.Collections;
 using System.IO;
+using System.Reflection.PortableExecutable;
+
 public class Student
 {
     int[] quiz = new int[10];
@@ -22,22 +24,26 @@ public class Student
         try
         {
             string[] data = s.Split(','); //splits the string at the commas
-            name = data[0].Trim(); //since the string has been split, and I know where the data is I can substring
-            ID = int.Parse(data[1].Trim());
+            name = data[0]; //since the string has been split, and I know where the data is I can substring
+            ID = int.Parse(data[1]);
             for (int i = 0; i < 10; i++)
             {
-                quiz[i] = int.Parse(data[i + 2].Trim()); // Parse the integer from the string and trim whitespace
+                quiz[i] = int.Parse(data[i + 2]); // Parse the integer from the string and trim whitespace
             }
             for (int i = 0; i < 10; i++)
             {
-                homework[i] = int.Parse(data[i + 12].Trim()); // Parse the integer from the string and trim whitespace
+                homework[i] = int.Parse(data[i + 12]); // Parse the integer from the string and trim whitespace
             }
-            midterm = int.Parse(data[22].Trim());
-            final = int.Parse(data[23].Trim());
+            midterm = int.Parse(data[22]);
+            final = int.Parse(data[23]);
         }
-        catch (FormatException e)
+        catch (FormatException)
         {
-            Console.WriteLine(e + " Student format eror");
+            Console.WriteLine("Student format error for input string: " + s);
+        }
+        catch (IndexOutOfRangeException)
+        {
+            Console.WriteLine("Student Index error");
         }
         catch (IOException e)
         {
@@ -105,22 +111,32 @@ public class Gradebook
         {
             using (StreamReader sr = new StreamReader(fileName))
             {
-                string lineNo = sr.ReadLine();
-                Student student = new Student(lineNo);
-                students.AddLast(student);
+                string headerRow = sr.ReadLine();
+                int lineNo = 2;
+                string lineStudent;
+                while ((lineStudent = sr.ReadLine()) != null)
+                {
+                    Student student = new Student(lineStudent);
+                    students.AddLast(student);
+                    lineNo++;
+                }
             }
         }
-        catch (FormatException e)
+        catch (FormatException)
         {
-            Console.WriteLine(e + "Gradebook format error");
+            Console.WriteLine("Gradebook format error");
         }
-        catch (FileNotFoundException e)
+        catch (IndexOutOfRangeException)
         {
-            Console.WriteLine(e + "Gradebook file not found");
+            Console.WriteLine("Gradebook Index error");
         }
-        catch (IOException e)
+        catch (FileNotFoundException)
         {
-            Console.WriteLine(e + "Gradebook file error");
+            Console.WriteLine("Gradebook file not found");
+        }
+        catch (IOException)
+        {
+            Console.WriteLine("Gradebook file error");
         }
         catch (Exception e)
         {
@@ -175,7 +191,7 @@ public class StatisticGradeBook : Gradebook
             
         }
 
-        int total = students.Count;
+        int total = students.Count - 1;
         foreach (Student s in students)
         {
             s.calcQuizAverage();
@@ -193,7 +209,7 @@ public class Program
 {
     public static void Main(string[] args)
     {
-        StatisticGradeBook sg = new StatisticGradeBook("Assignment7-Spreadsheet (1).xlsx");
+        StatisticGradeBook sg = new StatisticGradeBook("Assignment7-Spreadsheet (1).csv");
         Thread t1 = new Thread(sg.run);
         t1.Start();
         Console.WriteLine("What students grade would you like to pull up?");
