@@ -19,19 +19,34 @@ public class Student
                               * grab the details and input them as we did for lab 10
                               */
     {
-        s.Split(','); //splits the string at the commas
-        name = s.Substring(0, 1); //since the string has been split, and I know where the data is I can substring
-        ID = int.Parse(s.Substring(1, 2));
-        for (int i = 0; i < 11; i++)
+        try
         {
-            quiz[i] = int.Parse(s.Substring(i + 2, i + 3));
+            string[] data = s.Split(','); //splits the string at the commas
+            name = data[0].Trim(); //since the string has been split, and I know where the data is I can substring
+            ID = int.Parse(data[1].Trim());
+            for (int i = 0; i < 10; i++)
+            {
+                quiz[i] = int.Parse(data[i + 2].Trim()); // Parse the integer from the string and trim whitespace
+            }
+            for (int i = 0; i < 10; i++)
+            {
+                homework[i] = int.Parse(data[i + 12].Trim()); // Parse the integer from the string and trim whitespace
+            }
+            midterm = int.Parse(data[22].Trim());
+            final = int.Parse(data[23].Trim());
         }
-        for (int i = 0; i < 11; i++)
+        catch (FormatException e)
         {
-            homework[i] = int.Parse(s.Substring(i + 12, i + 13));
+            Console.WriteLine(e + " Student format eror");
         }
-        midterm = int.Parse(s.Substring(22, 23));
-        final = int.Parse(s.Substring(s.Length - 2, s.Length - 1));
+        catch (IOException e)
+        {
+            Console.WriteLine(e + "Student file error");
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e + "Student Error");
+        }
     }
     public void calcQuizAverage()
     {
@@ -83,7 +98,7 @@ public class Student
 }
 public class Gradebook
 {
-    LinkedList<Student> students = new LinkedList<Student>();
+    public LinkedList<Student> students = new LinkedList<Student>();
     public Gradebook(string fileName)
     {
         try
@@ -95,17 +110,21 @@ public class Gradebook
                 students.AddLast(student);
             }
         }
+        catch (FormatException e)
+        {
+            Console.WriteLine(e + "Gradebook format error");
+        }
         catch (FileNotFoundException e)
         {
-            Console.WriteLine(e + "Error");
+            Console.WriteLine(e + "Gradebook file not found");
         }
         catch (IOException e)
         {
-            Console.WriteLine(e + "Error");
+            Console.WriteLine(e + "Gradebook file error");
         }
         catch (Exception e)
         {
-            Console.WriteLine(e + "Error");
+            Console.WriteLine(e + "Gradebook Error");
         }
     }
     public Student getStudent(string name)
@@ -142,8 +161,43 @@ public class Gradebook
 }
 public class StatisticGradeBook : Gradebook
 {
-    public StatisticGradeBook(string gradeFiles) : base(gradeFiles)
+    public StatisticGradeBook(string gradeFile) : base(gradeFile)
     {
 
+    }
+    public void run()
+    {
+        LinkedList<string> names = new LinkedList<string>();
+        int count = 0;
+        foreach (Student s in students)
+        {
+            names.AddLast(s.name);
+            
+        }
+
+        int total = students.Count;
+        foreach (Student s in students)
+        {
+            s.calcQuizAverage();
+            s.calcHwAverage();
+            s.calcOverallAverage();
+            count++;
+            if (count % 100 == 0)
+            {
+                Console.WriteLine($"Calculating grades {count} out of {total}");
+            }
+        }
+    }
+}
+public class Program
+{
+    public static void Main(string[] args)
+    {
+        StatisticGradeBook sg = new StatisticGradeBook("Assignment7-Spreadsheet (1).xlsx");
+        Thread t1 = new Thread(sg.run);
+        t1.Start();
+        Console.WriteLine("What students grade would you like to pull up?");
+        string name = Console.ReadLine();
+        sg.getStudentGrade(name);
     }
 }
